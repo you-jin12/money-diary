@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+  <meta charset="UTF-8">
+  <title>용돈기입짱짱</title>
+  <style>
+
+    @font-face {
+      font-family: 'MabinogiClassicR';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2207-01@1.0/MabinogiClassicR.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body{
+      font-family: 'MabinogiClassicR';
+      background-color: #C9D6DF;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      height:600px;
+    }
+
+    th, td {
+      text-align: center;
+      padding: 8px;
+      border: 1px solid black;
+    }
+
+    th {
+      background-color: #52616B;
+      height:100px;
+    }
+
+    td.today {
+      background-color: lightblue;
+    }
+
+    td:not(.today):hover {
+      background-color: lightgray;
+      cursor: pointer;
+    }
+
+
+    #calendar-body{
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+<h1 id="calendar-title"></h1>
+<a href="/money/form">
+  <h2>전체보기</h2>
+</a>
+<table>
+  <thead>
+  <tr>
+    <th>일요일</th>
+    <th>월요일</th>
+    <th>화요일</th>
+    <th>수요일</th>
+    <th>목요일</th>
+    <th>금요일</th>
+    <th>토요일</th>
+  </tr>
+  </thead>
+  <tbody id="calendar-body">
+  </tbody>
+</table>
+
+<script>
+  // 이번 달의 날짜를 가져오기 위해 Date 객체를 생성합니다.
+  let currentDate = new Date();
+
+  // 이번 달의 첫째 날을 찾습니다.
+  let firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+  // 이번 달의 마지막 날을 찾습니다.
+  let lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+  // 년도와 월을 출력합니다.
+  let title = document.getElementById('calendar-title');
+  title.innerHTML = `${currentDate.getFullYear()}년 ${currentDate.getMonth() + 1}월`;
+
+  // 달력에 표시할 날짜들을 배열에 담습니다.
+  let dates = [];
+  for (let i = 1; i <= lastDay.getDate(); i++) {
+    dates.push(new Date(currentDate.getFullYear(), currentDate.getMonth(), i));
+  }
+
+  // 테이블의 tbody 요소를 찾습니다.
+  let calendarBody = document.getElementById('calendar-body');
+
+  // 날짜를 채워 넣을 HTML 코드를 생성합니다.
+  let html = '';
+  let row = '<tr>';
+  let today = new Date();
+  dates.forEach((date, index) => {
+    if (index % 7 === 0) {
+      html += row + '</tr>';
+      row = '<tr>';
+    }
+    if (date.toDateString() === today.toDateString()) {
+      row += `<td class="today" data-date="${date.toISOString()}">${date.getDate()}</td>`;
+    } else {
+      row += `<td data-date="${date.toISOString()}">${date.getDate()}</td>`;
+    }
+  });
+  html += row + '</tr>';
+
+  // tbody 요소에 HTML 코드를 삽입합니다.
+  calendarBody.innerHTML = html;
+
+  // 모든 td 요소에 클릭 이벤트를 추가합니다.
+  let tdElements = document.querySelectorAll('td');
+  tdElements.forEach((td) => {
+    td.addEventListener('click', () => {
+      let date = new Date(td.dataset.date);
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1; // 클릭
+      let formatM = (("00"+month.toString()).slice(-2))
+      let day=date.getDate();
+      let formatD=(("00"+day.toString()).slice(-2));
+      // 원하는 페이지 URL로 이동합니다.
+      window.location.href = `/money/day/${year}-${formatM}-${formatD}`;
+      // http://example.com/${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}
+      // http://example.com/NaN-NaN-NaN
+    });
+  });
+
+</script>
+</body>
+</html>
