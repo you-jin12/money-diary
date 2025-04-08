@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Calendar({ currentYear, currentMonth }) {
 
     const navigate = useNavigate();
+
     const [calendarArr, setCalendarArr] = useState([[]]);
     const [isChangeCalendar, setIsChangeCalendar] = useState(false);
 
@@ -42,7 +43,6 @@ function Calendar({ currentYear, currentMonth }) {
         setCalendarArr(calendarArr2);
     }
 
-    // [1000,2000,3000,30004,5000] 서버에서 이렇게 보내주면 안되나?
     function makeCalendar() {
 
         var dateArr = [new Array(7).fill(null).map(() => ({ date: null, totalMoney: 0 }))];
@@ -82,17 +82,12 @@ function Calendar({ currentYear, currentMonth }) {
 
         return `${currentYear}${month}${date}`;
     }
+    console.log("Calendar.js 호출");
 
     useEffect(() => {
         makeCalendar();
-    }, [currentYear, currentMonth]);
+    })
 
-    useEffect(() => {
-        if (isChangeCalendar === true) {
-            setIsChangeCalendar(false);
-            getTotalExpenseMoney();
-        }
-    }, [calendarArr, isChangeCalendar]);
 
     return (
         <table className={style.calendar}>
